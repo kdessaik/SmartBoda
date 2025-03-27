@@ -1,12 +1,18 @@
 import React from 'react'
-import '../App.css'
-import 'bootstrap/dist/css/bootstrap.min.css'
+import '../../App.css'
+
 import { faCheck, faTimes,faInfoCircle } from '@fortawesome/free-solid-svg-icons'
 import { useRef, useState, useEffect } from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from '../api/axios'
+import axios from '../../api/axios'
+import { useAuth } from '../Others/AuthContext'
+import signupGoogleImage from '../../assets/image/icons/signup.png'
+import {doSignUpWithGoogle} from '../Others/AuthContext'
 
-const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
+import { useNavigate } from 'react-router';
+import { Link } from 'react-router';
+
+const USER_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
 const REGISTER_URL='/register'
@@ -18,7 +24,10 @@ const REGISTER_URL='/register'
 
 
 
+
+
 function Register() {
+    
     const userRef = useRef();
     const errRef = useRef()
   
@@ -38,7 +47,9 @@ function Register() {
     const [success, setSuccess] = useState(false);
 
     const [typePassword,setTypePassword]=useState('password')
-    const [ShowPassword,setShowPassword]=useState()
+    const [DisableSubmit,setDisableSubmit]=useState(false)
+
+    const navigate=useNavigate()
 
   
    
@@ -88,6 +99,7 @@ function Register() {
 
     }
 }
+const {signup}=useAuth()
       
     const handleSubmit=async (e)=>{
         e.preventDefault();
@@ -98,18 +110,16 @@ function Register() {
             return;
     };
 
+
     try{
-    const response= await axios.post(REGISTER_URL,JSON.stringify({user,pwd}),{
-       headers:{'Content-type':'application/json'},
-       withCredentials:true
-    });
-    console.log(response.data)
-    console.log(response.AccessToken);
-    console.log(JSON.stringify(response));
-    setSuccess(true)
+      await  signup(user,pwd)
+      setDisableSubmit(true)
+      navigate('/Dashboard')
+    
          
 
     }catch(err){
+        console.log(err)
         if (!err.response){
             setErrMsg('No server Response')
 
@@ -123,8 +133,35 @@ function Register() {
     }
      
     }
-    
-  
+    const handleSubmitGoogleSignUp=async (e)=>{
+        
+        try{
+            await  doSignUpWithGoogle()
+            setDisableSubmit(true)
+            navigate('/Dashboard')
+            
+            
+           
+          
+               
+      
+          }catch(err){
+            console.log(err)
+              if (!err.response){
+                  setErrMsg('No server Response')
+      
+              } else if(err.response?.status===409){
+                  setErrMsg('Username taken')
+              } else{
+                  setErrMsg('Registration Failed')
+              }
+              errRef.current.focus()
+      
+          }
+
+
+    }
+
   
   
     return (
@@ -142,7 +179,7 @@ function Register() {
                 <h1>Register</h1>
                 <form  className="form-row" onSubmit={handleSubmit}>
                     <label htmlFor="username">
-                        Username:
+                        Email:
                         <FontAwesomeIcon icon={faCheck} className={validName ? "valid" : "hide"} />
                         <FontAwesomeIcon icon={faTimes} className={validName || !user ? "hide" : "invalid"} />
                     </label>
@@ -225,13 +262,18 @@ function Register() {
                         Must match the first password input field.
                     </p>
 
-                    <button className="btn btn-primary" disabled={!validName || !validPwd || !validMatch ? true : false}>Sign Up</button>
+                    <button className="btn btn-primary"  disabled={!validName || !validPwd || !validMatch || DisableSubmit ?  true : false}>Sign Up</button>
+
                 </form>
+                <span>
+                    <p>Or</p>
+                     <img src={signupGoogleImage} alt="Signup with Google" className='signupImg' onClick={handleSubmitGoogleSignUp} />
+                </span><br/>
                 <p>
                     Already registered?<br />
                     <span className="line">
-                        {/*put router link here*/}
-                        <a href="#">Sign In</a>
+                       
+                       <Link to='/Login'>Sign In</Link>  
                     </span>
                 </p>
             </section>
