@@ -1,5 +1,5 @@
 import React from 'react'
-import '../../App.css'
+import '../../assets/style/auth.css'
 
 import { faCheck, faTimes,faInfoCircle } from '@fortawesome/free-solid-svg-icons'
 import { useRef, useState, useEffect } from 'react'
@@ -64,16 +64,14 @@ function Register() {
   
     useEffect(() => {
       const result = USER_REGEX.test(user);
-      console.log(result);
-      console.log(user);
+      
       setValiName(user);
     }, [user])
   
     useEffect(() => {
         const result=PWD_REGEX.test(pwd)
       
-      console.log(result);
-      console.log(pwd);
+      
       setValidPwd(result)
       const match=pwd ===matchPwd
       setValidMatch(match);

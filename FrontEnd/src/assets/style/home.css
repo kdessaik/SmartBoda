@@ -1,0 +1,29 @@
+*{
+    padding: 0px;
+    margin: 0px;
+}
+.container{
+    gap: 40vw;
+}
+.navbar-nav{
+    gap: 40px;
+}
+.btn-primary{
+    background-color:#0d6efd;
+    color: white; 
+}
+.btn-primary:hover{
+    background-color:#0d6dfd7e;
+    color: rgb(0, 0, 0); 
+}
+.btn-success{
+    background-color:#157347;
+    color: white; 
+}
+.btn-success:hover{
+    background-color:#1573475b;
+    color: rgb(0, 0, 0); 
+}
+
+
+
