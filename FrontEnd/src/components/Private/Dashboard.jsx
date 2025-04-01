@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { auth } from "../../../firebase";
 import { useNavigate } from "react-router"; // Fix import path
-import {GoogleMap, LoadScript,DirectionsService, DirectionsRenderer} from '@react-google-maps/api'
+import Map from "../../map/Map";
+
 
 const containeStyle={
   width:'85vw',
@@ -17,7 +18,9 @@ const destination = { lat: 3.11911, lng: 35.59727 }; // Customer location(Lodwar
 
 
 
-const apiKey=import.meta.env.VITE_GOOGLE_MAP_API_KEY
+const apiKey=import.meta.env.VITE_Here_MAP_API_KEY
+
+
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -28,6 +31,22 @@ function Dashboard() {
   const [directionsResponse, setDirectionsResponse] = useState(null);
   const [distance, setDistance] = useState("");
   const [duration, setDuration] = useState("");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -71,34 +90,12 @@ function Dashboard() {
       <h1>Dashboard</h1>
       <h2>Welcome, {displayName}!</h2>
       <button onClick={handleLogout}>Logout</button>
-      <LoadScript googleMapsApiKey={apiKey}>
-        <GoogleMap mapContainerStyle={containeStyle} center={center} zoom={10}>
-        <DirectionsService
-          options={{
-            destination: destination,
-            origin: origin,
-            travelMode: "DRIVING",
-          }}
-          callback={handleDirectionsCallback}
-        />
 
-{directionsResponse && (
-          <DirectionsRenderer options={{ directions: directionsResponse }} />
-        )}
+      <section >
+        <Map apikey={apiKey}/>
 
-        </GoogleMap>
-
-        <div style={{ padding: "10px", background: "#fff", marginTop: "10px" }}>
-        <h3>Delivery Details</h3>
-        <p><strong>Distance:</strong> {distance}</p>
-        <p><strong>Estimated Time:</strong> {duration}</p>
-      </div>
-
-
-
-
-
-      </LoadScript>
+      </section>
+     
     </>
   );
 }
