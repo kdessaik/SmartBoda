@@ -93,7 +93,7 @@ function Dashboard() {
   const handleLogout = async () => {
     try {
       await auth.signOut();
-      navigate("/login"); // Redirect to login page after logout
+      navigate("/"); // Redirect to login page after logout
     } catch (error) {
       console.error("Logout failed:", error);
     }
