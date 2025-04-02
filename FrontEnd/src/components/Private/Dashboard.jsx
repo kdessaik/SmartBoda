@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { auth } from "../../../firebase";
 import { useNavigate } from "react-router"; // Fix import path
-import Map from "../../map/Map";
+import Mapfirst from '../../map/Map'
+import RestaurantList from "./RestaurantEntry";
 
 
 const containeStyle={
@@ -15,6 +16,28 @@ const center={
 
 const origin = { lat: 3.7166638, lng: 34.8666632 }; //Motorbike location (Kakuma)
 const destination = { lat: 3.11911, lng: 35.59727 }; // Customer location(Lodwar)
+
+const userPosition = { lat: 3.1195, lng: 35.5973 };
+
+
+const restaurantList = [
+  {
+    name: "The Lounge",
+    location: { lat: 3.1195, lng: 35.5973 },
+  },
+  {
+    name: "White Sand Lodwar",
+    location: { lat: 3.1200, lng: 35.6000 },
+  },
+  {
+    name: "Ato's Bar and Lounge",
+    location: { lat: 3.1180, lng: 35.5950 },
+  },
+  {
+    name: "Antidote Bar and Grill",
+    location: { lat: 3.1155, lng: 35.5925 },
+  },
+];
 
 
 
@@ -83,6 +106,14 @@ function Dashboard() {
       setDuration(response.routes[0].legs[0].duration.text);
     }
   };
+
+
+
+  const [restaurantPosition, setRestaurantPosition] = useState(null);
+
+  const onClickHandler_ = (location) => {
+    setRestaurantPosition(location);
+};
   
 
   return (
@@ -92,7 +123,30 @@ function Dashboard() {
       <button onClick={handleLogout}>Logout</button>
 
       <section >
-        <Map apikey={apiKey}/>
+        <div  style = {
+            {
+                display: 'flex'
+            }
+        } >
+        <RestaurantList list = {
+            restaurantList
+        }
+        onClickHandler = {onClickHandler_}
+        /> 
+        </div>
+
+
+
+        <Mapfirst apikey={apiKey}
+
+        userPosition = {
+          userPosition
+      }
+      restaurantPosition = {
+          restaurantPosition
+      }
+        
+        />
 
       </section>
      
