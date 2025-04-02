@@ -1,0 +1,12 @@
+section {
+    width: 100%;
+    max-width: 420px;
+    min-height: 400px;
+    display: flex
+;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 10vw;
+    padding: 1rem;
+    background-color: rgba(223, 223, 223, 0.4);
+}

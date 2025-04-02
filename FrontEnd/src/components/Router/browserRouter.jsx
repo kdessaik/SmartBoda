@@ -9,6 +9,7 @@ import{lazy,Suspense} from 'react'
 const Home=lazy(()=>import('../Public/Home.jsx'))
 const About=lazy(()=>import('../Public/About.jsx'))
 const NotFound=lazy(()=>import('../Public/NotFound.jsx'))
+const Help=lazy(()=>import('../Public/Help.jsx'))
 const Register=lazy(()=>import('../Auth/Register.jsx'))
 const Dashboard=lazy(()=>import('../Private/Dashboard.jsx'))
 const Login=lazy(()=>import('../Auth/Login.jsx'))
@@ -32,6 +33,16 @@ const router=createBrowserRouter([
         
         ,
     },
+    {
+        path:'/help',
+        element:
+        <Suspense fallback={<div>Loading...</div>}>
+            <Help/>
+        </Suspense>
+        
+        ,
+    },
+
     {
         path:'*',// Catch-all route for 404
         element:<Suspense fallback={<div>Loarding...</div>}>

@@ -1,6 +1,7 @@
 import React from 'react'
 import '../../App.css'
 import '../../assets/style/auth.css'
+import '../../assets/style/home.css'
 
 import { faCheck, faTimes,faInfoCircle } from '@fortawesome/free-solid-svg-icons'
 import { useRef, useState, useEffect } from 'react'
@@ -15,6 +16,8 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { doSignInWithGoogle } from '../Others/AuthContext';
 import { Link } from 'react-router';
 import { auth } from '../../../firebase';
+import { NavBar } from '../Public/Home'
+import { Footer } from '../Public/Home'
 
 const USER_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
@@ -170,8 +173,11 @@ const {signup}=useAuth()
                 </p>
             </section>
         ) : (
-            <section>
+            <> 
+            <NavBar/>
+            <section className='loginSection'>
                 <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
+                
                 <h1>Login</h1>
                 <form  className="form-row" onSubmit={handleSubmit}>
                     <label htmlFor="username">
@@ -252,6 +258,9 @@ const {signup}=useAuth()
                     </span>
                 </p>
             </section>
+            <Footer/>
+            </>
+            
         )}
     </>
   

@@ -25,5 +25,24 @@
     color: rgb(0, 0, 0); 
 }
 
+a.btn-primary, a.btn-primary:visited {
+    color: #ffffff;
+}
+
+a.btn-success, a.btn-success:visited {
+    color: #ffffff;
+}
+a.btn-primary:hover {
+    color: #000000;
+}
+
+a.btn-success:hover {
+    color: #000000;
+}
+
+/* footer css*/
 
 
+.footer{
+    margin-top: 200px;
+}

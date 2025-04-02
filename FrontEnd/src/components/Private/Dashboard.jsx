@@ -3,6 +3,7 @@ import { auth } from "../../../firebase";
 import { useNavigate } from "react-router"; // Fix import path
 import Mapfirst from '../../map/Map'
 import RestaurantList from "./RestaurantEntry";
+import '../../assets/style/dashboard.css'
 
 
 const containeStyle={
@@ -99,13 +100,7 @@ function Dashboard() {
   };
  
 
-  const handleDirectionsCallback = (response) => {
-    if (response !== null && response.status === "OK") {
-      setDirectionsResponse(response);
-      setDistance(response.routes[0].legs[0].distance.text);
-      setDuration(response.routes[0].legs[0].duration.text);
-    }
-  };
+
 
 
 

@@ -143,38 +143,7 @@ export default Mapfirst;
 
 
 
-const MapSecond = (props) => {
-    const mapRef = useRef(null);
-    const map = useRef(null);
-    const platform = useRef(null);
-    const { apikey, userPosition, restaurantPosition } = props
 
-    useEffect(() => {
-        // Hook definition...
-
-        const newMap = new H.Map(
-            mapRef.current,
-            defaultLayers.vector.normal.map, {
-                zoom: 14,
-                center: userPosition,
-            }
-        );
-        if (restaurantPosition) {
-            calculateRoute(platform.current, map.current, userPosition, restaurantPosition);
-        }
-
-
-
-
-
-      }, 
-     // Dependencies array 
-     [apikey, userPosition, restaurantPosition]);
-
-
-
-
-}
 
 
 function getMarkerIcon(color) {
