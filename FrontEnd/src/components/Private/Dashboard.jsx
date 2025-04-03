@@ -4,6 +4,7 @@ import { useNavigate } from "react-router"; // Fix import path
 import Mapfirst from '../../map/Map'
 import RestaurantList from "./RestaurantEntry";
 import '../../assets/style/dashboard.css'
+import HereMap from "./MyLocation";
 
 
 const containeStyle={
@@ -55,6 +56,11 @@ function Dashboard() {
   const [directionsResponse, setDirectionsResponse] = useState(null);
   const [distance, setDistance] = useState("");
   const [duration, setDuration] = useState("");
+
+
+
+
+
 
 
 
@@ -142,6 +148,8 @@ function Dashboard() {
       }
         
         />
+
+        <HereMap/>
 
       </section>
      

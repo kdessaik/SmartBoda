@@ -8,12 +8,14 @@ import { Link } from 'react-router';
 
 
 
+
 function Home() {
   const login=useNavigate('/login')
   return (
    <>
    <NavBar/>
    <h1>This Home Page</h1>
+   
    <Footer/>
    
    </>
