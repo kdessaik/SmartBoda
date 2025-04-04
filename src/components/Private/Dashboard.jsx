@@ -4,50 +4,68 @@ import { useNavigate } from "react-router"; // Fix import path
 import Mapfirst from '../../map/Map'
 import RestaurantList from "./RestaurantEntry";
 import '../../assets/style/dashboard.css'
-import HereMap from "./MyLocation";
-
-
-const containeStyle={
-  width:'85vw',
-  height:'85vh',
-}
-const center={
-  lat:3.7166638 ,
-  lng:34.8666632,
-};
-
-const origin = { lat: 3.7166638, lng: 34.8666632 }; //Motorbike location (Kakuma)
-const destination = { lat: 3.11911, lng: 35.59727 }; // Customer location(Lodwar)
-
-const userPosition = { lat: 3.1195, lng: 35.5973 };
-
-
-const restaurantList = [
-  {
-    name: "The Lounge",
-    location: { lat: 3.1195, lng: 35.5973 },
-  },
-  {
-    name: "White Sand Lodwar",
-    location: { lat: 3.1200, lng: 35.6000 },
-  },
-  {
-    name: "Ato's Bar and Lounge",
-    location: { lat: 3.1180, lng: 35.5950 },
-  },
-  {
-    name: "Antidote Bar and Grill",
-    location: { lat: 3.1155, lng: 35.5925 },
-  },
-];
+import getUserLocation from '../Private/MyLocation'
+import { use } from "react";
 
 
 
-const apiKey=import.meta.env.VITE_Here_MAP_API_KEY
 
 
 
 function Dashboard() {
+
+  const apiKey=import.meta.env.VITE_Here_MAP_API_KEY
+
+  const containeStyle={
+    width:'85vw',
+    height:'85vh',
+  }
+  const center={
+    lat:3.7166638 ,
+    lng:34.8666632,
+  };
+
+  
+  const origin = { lat: 3.7166638, lng: 34.8666632 }; //Motorbike location (Kakuma)
+  const destination = { lat: 3.11911, lng: 35.59727 }; // Customer location(Lodwar)
+  
+ 
+  const [userPosition, setUserPosition] = useState(null);
+  
+  
+  const restaurantList = [
+    {
+      name: "The Lounge",
+      location: { lat: 3.1195, lng: 35.5973 },
+    },
+    {
+      name: "White Sand Lodwar",
+      location: { lat: 3.1200, lng: 35.6000 },
+    },
+    {
+      name: "Ato's Bar and Lounge",
+      location: { lat: 3.1180, lng: 35.5950 },
+    },
+    {
+      name: "Antidote Bar and Grill",
+      location: { lat: 3.1155, lng: 35.5925 },
+    },
+  ];
+
+ 
+  
+
+ 
+
+
+
+
+
+
+
+
+
+
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
   const [displayName, setDisplayName] = useState("");
@@ -56,6 +74,19 @@ function Dashboard() {
   const [directionsResponse, setDirectionsResponse] = useState(null);
   const [distance, setDistance] = useState("");
   const [duration, setDuration] = useState("");
+
+
+
+
+
+ 
+
+
+
+
+
+
+
 
 
 
@@ -91,6 +122,8 @@ function Dashboard() {
       }
     });
 
+   
+
     return () => unsubscribe(); // Cleanup listener
   }, [navigate]);
 
@@ -115,6 +148,47 @@ function Dashboard() {
   const onClickHandler_ = (location) => {
     setRestaurantPosition(location);
 };
+
+
+useEffect(() => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setUserPosition({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+      },
+      (error) => {
+        console.error("Error getting location:", error);
+      }
+    );
+  } else {
+    console.error("Geolocation is not supported by this browser.");
+  }
+}, []);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   
 
   return (
@@ -149,7 +223,7 @@ function Dashboard() {
         
         />
 
-        <HereMap/>
+       
 
       </section>
      
