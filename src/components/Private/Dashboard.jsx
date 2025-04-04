@@ -1,38 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { auth } from "../../../firebase";
-import { useNavigate } from "react-router"; // Fix import path
-import Mapfirst from '../../map/Map'
+import { useNavigate } from "react-router";
+import Mapfirst from "../../map/Map";
 import RestaurantList from "./RestaurantEntry";
-import '../../assets/style/dashboard.css'
-import getUserLocation from '../Private/MyLocation'
-import { use } from "react";
-
-
-
-
-
+import "../../assets/style/dashboard.css";
 
 function Dashboard() {
+  const apiKey = import.meta.env.VITE_Here_MAP_API_KEY;
 
-  const apiKey=import.meta.env.VITE_Here_MAP_API_KEY
-
-  const containeStyle={
-    width:'85vw',
-    height:'85vh',
-  }
-  const center={
-    lat:3.7166638 ,
-    lng:34.8666632,
-  };
-
-  
-  const origin = { lat: 3.7166638, lng: 34.8666632 }; //Motorbike location (Kakuma)
-  const destination = { lat: 3.11911, lng: 35.59727 }; // Customer location(Lodwar)
-  
- 
   const [userPosition, setUserPosition] = useState(null);
-  
-  
+  const [locationError, setLocationError] = useState(null);
+  const [loadingLocation, setLoadingLocation] = useState(true);
+  const [restaurantPosition, setRestaurantPosition] = useState(null);
+
+  const [userData, setUserData] = useState(null);
+  const [displayName, setDisplayName] = useState("");
+  const [directionsResponse, setDirectionsResponse] = useState(null);
+  const [distance, setDistance] = useState("");
+  const [duration, setDuration] = useState("");
+
+  const navigate = useNavigate();
+
   const restaurantList = [
     {
       name: "The Lounge",
@@ -52,144 +40,82 @@ function Dashboard() {
     },
   ];
 
- 
-  
-
- 
-
-
-
-
-
-
-
-
-
-
-  const navigate = useNavigate();
-  const [userData, setUserData] = useState(null);
-  const [displayName, setDisplayName] = useState("");
-
-
-  const [directionsResponse, setDirectionsResponse] = useState(null);
-  const [distance, setDistance] = useState("");
-  const [duration, setDuration] = useState("");
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  useEffect(() => {
-    // Listen for auth state changes
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        setUserData(user);
-        setDisplayName(user.displayName || "User"); // Set display name
-      } else {
-        navigate("/register"); // Redirect if not authenticated
-      }
-    });
-
-   
-
-    return () => unsubscribe(); // Cleanup listener
-  }, [navigate]);
-
-
-
+  // Handle user logout
   const handleLogout = async () => {
     try {
       await auth.signOut();
-      navigate("/"); // Redirect to login page after logout
+      navigate("/");
     } catch (error) {
       console.error("Logout failed:", error);
     }
   };
- 
 
+  // Get current user info
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setUserData(user);
+        setDisplayName(user.displayName || "User");
+      } else {
+        navigate("/register");
+      }
+    });
+    return () => unsubscribe();
+  }, [navigate]);
 
+  // Function to get user location (used both on first load and on retry)
+  const getUserLocation = () => {
+    setLoadingLocation(true);
+    setLocationError(null);
 
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserPosition({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+          setLoadingLocation(false);
+        },
+        (error) => {
+          console.error("Error getting location:", error);
+          setLocationError(error.message);
+          setLoadingLocation(false);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0,
+        }
+      );
+    } else {
+      setLocationError("Geolocation is not supported by this browser.");
+      setLoadingLocation(false);
+    }
+  };
 
-
-  const [restaurantPosition, setRestaurantPosition] = useState(null);
+  // Run once on mount
+  useEffect(() => {
+    getUserLocation();
+  }, []);
 
   const onClickHandler_ = (location) => {
     setRestaurantPosition(location);
-};
+  };
 
-
-useEffect(() => {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setUserPosition({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        });
-      },
-      (error) => {
-        console.error("Error getting location:", error);
-      }
-    );
-  } else {
-    console.error("Geolocation is not supported by this browser.");
+  // Show loading or error with retry option
+  if (loadingLocation) {
+    return <p>Getting your location...</p>;
   }
-}, []);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
+  if (locationError) {
+    return (
+      <div>
+        <p>Error: {locationError}</p>
+        <button onClick={getUserLocation}>Retry</button>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -197,36 +123,20 @@ useEffect(() => {
       <h2>Welcome, {displayName}!</h2>
       <button onClick={handleLogout}>Logout</button>
 
-      <section >
-        <div  style = {
-            {
-                display: 'flex'
-            }
-        } >
-        <RestaurantList list = {
-            restaurantList
-        }
-        onClickHandler = {onClickHandler_}
-        /> 
+      <section>
+        <div style={{ display: "flex" }}>
+          <RestaurantList
+            list={restaurantList}
+            onClickHandler={onClickHandler_}
+          />
         </div>
 
-
-
-        <Mapfirst apikey={apiKey}
-
-        userPosition = {
-          userPosition
-      }
-      restaurantPosition = {
-          restaurantPosition
-      }
-        
+        <Mapfirst
+          apikey={apiKey}
+          userPosition={userPosition}
+          restaurantPosition={restaurantPosition}
         />
-
-       
-
       </section>
-     
     </>
   );
 }
