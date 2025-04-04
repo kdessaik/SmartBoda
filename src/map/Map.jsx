@@ -85,44 +85,81 @@ const Mapfirst = (props) => {
     const { apikey, userPosition, restaurantPosition } = props;
 
     useEffect(() => {
-        // Check if the map object has already been created
-        if (!map.current) {
-            // Create a platform object with the API key and useCIT option
-            platform.current = new H.service.Platform({
-                apikey
-            });
-            // Obtain the default map types from the platform object:
-            const defaultLayers = platform.current.createDefaultLayers({
-                pois: true
-            });
-            // Create a new map instance with the Tile layer, center and zoom level
-            // Instantiate (and display) a map:
-            const newMap = new H.Map(
-                mapRef.current,
-                defaultLayers.vector.normal.map, {
-                    zoom: 14,
-                    center: userPosition,
-                }
-            ); 
-            
-           
-
-            // Add panning and zooming behavior to the map
-            const behavior = new H.mapevents.Behavior(
-                new H.mapevents.MapEvents(newMap)
-            );
-
-            // Set the map object to the reference
-            map.current = newMap; 
-            const ui = H.ui.UI.createDefault(newMap, defaultLayers);
-        };
-        if (restaurantPosition) {
-            calculateRoute(platform.current, map.current, userPosition, restaurantPosition);
+        if (!map.current && userPosition) {
+          platform.current = new H.service.Platform({ apikey });
+          const defaultLayers = platform.current.createDefaultLayers({ pois: true });
+      
+          const newMap = new H.Map(
+            mapRef.current,
+            defaultLayers.vector.normal.map,
+            {
+              zoom: 14,
+              center: userPosition,
+            }
+          );
+      
+          // Add default UI and behavior
+          new H.mapevents.Behavior(new H.mapevents.MapEvents(newMap));
+          H.ui.UI.createDefault(newMap, defaultLayers);
+      
+          // Add marker for user's location
+          const userMarker = new H.map.Marker(userPosition, {
+            icon: getMarkerIcon("blue"),
+          });
+          newMap.addObject(userMarker);
+      
+          map.current = newMap;
         }
-       
-       
+      
+        // If restaurant is selected, draw route
+        if (restaurantPosition && userPosition) {
+          calculateRoute(platform.current, map.current, userPosition, restaurantPosition);
+        }
+      }, [apikey, userPosition, restaurantPosition]);
 
-    }, [apikey, userPosition, restaurantPosition]);
+
+
+
+    useEffect(() => {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              setUserPosition({
+                lat: position.coords.latitude,
+                lng: position.coords.longitude,
+              });
+              setLoadingLocation(false);
+            },
+            (error) => {
+              console.error("Error getting location:", error);
+              setLocationError(error.message);
+              setLoadingLocation(false);
+            },
+            { enableHighAccuracy: true, timeout: 30000, maximumAge: 0 }
+          );
+        } else {
+          setLocationError("Geolocation is not supported by this browser.");
+          setLoadingLocation(false);
+        }
+      }, []);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // Return a div element to hold the map
     return < div style = {
