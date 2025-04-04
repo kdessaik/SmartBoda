@@ -63,13 +63,12 @@ function Dashboard() {
     return () => unsubscribe();
   }, [navigate]);
 
-  // Function to get user location (used both on first load and on retry)
-  const getUserLocation = () => {
-    setLoadingLocation(true);
-    setLocationError(null);
+  // Real-time location tracking
+  useEffect(() => {
+    let watchId;
 
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
+      watchId = navigator.geolocation.watchPosition(
         (position) => {
           setUserPosition({
             lat: position.coords.latitude,
@@ -84,26 +83,29 @@ function Dashboard() {
         },
         {
           enableHighAccuracy: true,
-          timeout: 30000,
+          timeout: 10000,
           maximumAge: 0,
-        }
+        },
+        // Run once on mount
+        
+        
       );
     } else {
-      setLocationError("Geolocation is not supported by this browser.");
+      setLocationError("Geolocation not supported");
       setLoadingLocation(false);
     }
-  };
 
-  // Run once on mount
-  useEffect(() => {
-    getUserLocation();
+    return () => {
+      if (watchId) {
+        navigator.geolocation.clearWatch(watchId);
+      }
+    };
   }, []);
 
   const onClickHandler_ = (location) => {
     setRestaurantPosition(location);
   };
 
-  // Show loading or error with retry option
   if (loadingLocation) {
     return <p>Getting your location...</p>;
   }
@@ -112,10 +114,16 @@ function Dashboard() {
     return (
       <div>
         <p>Error: {locationError}</p>
-        <button onClick={getUserLocation}>Retry</button>
+        <button onClick={() => window.location.reload()}>Retry</button>
       </div>
     );
   }
+
+
+// Run once on mount
+
+// Run once on mount
+
 
   return (
     <>
