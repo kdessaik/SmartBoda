@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 
 
 
+
 const getUserLocation = () => {
   return new Promise((resolve, reject) => {
     if (!navigator.geolocation) {
@@ -25,3 +26,5 @@ const getUserLocation = () => {
 };
 
 export default getUserLocation;
+
+

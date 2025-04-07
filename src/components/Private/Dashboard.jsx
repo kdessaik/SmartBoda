@@ -4,6 +4,8 @@ import { useNavigate } from "react-router";
 import Mapfirst from "../../map/Map";
 import RestaurantList from "./RestaurantEntry";
 import "../../assets/style/dashboard.css";
+import { updateUserLocation } from "../../map/Map";
+
 
 function Dashboard() {
   const apiKey = import.meta.env.VITE_Here_MAP_API_KEY;
@@ -66,15 +68,24 @@ function Dashboard() {
   // Real-time location tracking
   useEffect(() => {
     let watchId;
-
+  
     if (navigator.geolocation) {
       watchId = navigator.geolocation.watchPosition(
         (position) => {
-          setUserPosition({
+          const coords = {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
-          });
-          setLoadingLocation(false);
+          };
+  
+          setUserPosition(coords);              // Update map state
+          setLoadingLocation(false);            // Mark loading as done
+          setLocationError(null);               // Clear any previous errors
+  
+          // Update Firebase if user is logged in
+          if (auth.currentUser) {
+            const uid = auth.currentUser.uid;
+            updateUserLocation(uid, position.coords);
+          }
         },
         (error) => {
           console.error("Error getting location:", error);
@@ -85,16 +96,14 @@ function Dashboard() {
           enableHighAccuracy: true,
           timeout: 30000,
           maximumAge: 0,
-        },
-        // Run once on mount
-        
-        
+        }
       );
     } else {
-      setLocationError("Geolocation not supported");
+      setLocationError("Geolocation is not supported by this browser.");
       setLoadingLocation(false);
     }
-
+  
+    // Cleanup watcher on component unmount
     return () => {
       if (watchId) {
         navigator.geolocation.clearWatch(watchId);
@@ -102,6 +111,9 @@ function Dashboard() {
     };
   }, []);
 
+
+
+  
   const onClickHandler_ = (location) => {
     setRestaurantPosition(location);
   };
@@ -118,6 +130,12 @@ function Dashboard() {
       </div>
     );
   }
+
+
+
+  //Get the current user location and store it in the database
+
+
 
 
 // Run once on mount

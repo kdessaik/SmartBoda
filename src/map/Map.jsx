@@ -3,6 +3,38 @@ import React, {
     useRef
 } from 'react';
 import H from '@here/maps-api-for-javascript';
+import { ref, set } from "firebase/database";
+import { db } from "../../firebase"; 
+
+
+
+
+
+
+export const updateUserLocation = (uid, coords) => {
+  set(ref(db, "locations/" + uid), {
+    lat: coords.latitude,
+    lng: coords.longitude,
+    timestamp: Date.now(),
+  });
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
  const Map = ({

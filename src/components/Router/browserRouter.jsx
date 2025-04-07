@@ -13,6 +13,7 @@ const Help=lazy(()=>import('../Public/Help.jsx'))
 const Register=lazy(()=>import('../Auth/Register.jsx'))
 const Dashboard=lazy(()=>import('../Private/Dashboard.jsx'))
 const Login=lazy(()=>import('../Auth/Login.jsx'))
+const DashboardBoda=lazy(()=>import('../Private/DashboardBoda.jsx'))
 
 const router=createBrowserRouter([
     {
@@ -70,6 +71,12 @@ const router=createBrowserRouter([
         path:'/Login',
         element:<Suspense fallback={<div>Loading...</div>}>
             <Login/>
+        </Suspense>
+    },
+    {
+        path:'/Dashboardboda',
+        element:<Suspense fallback={<div>Loarding...</div>}>
+            <DashboardBoda/>
         </Suspense>
     }
 ])

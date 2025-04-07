@@ -19,6 +19,7 @@ import { auth } from '../../../firebase';
 import { NavBar } from '../Public/Home'
 import { Footer } from '../Public/Home'
 
+
 const USER_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
@@ -137,7 +138,7 @@ const {signup}=useAuth()
         try{
             await  doSignInWithGoogle()
             setDisableSubmit(true)
-            navigate('/Dashboard')
+            navigate('/Dashboardboda')
             
             
            
