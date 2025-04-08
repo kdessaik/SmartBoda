@@ -157,7 +157,7 @@ const {signup}=useAuth()
           } else if (adminUIDs.includes(uid)) {
             navigate("/Admin");
           } else {
-            navigate("/"); // regular users
+            navigate("/Dashboard"); // regular users
           }
         } catch (err) {
           console.log(err);
