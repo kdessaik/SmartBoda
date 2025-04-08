@@ -35,6 +35,7 @@ const REGISTER_URL='/register'
 
 
 function Login() {
+    console.log(import.meta.env.VITE_FIREBASE_Admin_One)
     
     const userRef = useRef();
     const errRef = useRef()
