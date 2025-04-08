@@ -35,7 +35,7 @@ const REGISTER_URL='/register'
 
 
 function Login() {
-    console.log(import.meta.env.VITE_FIREBASE_Admin_One)
+   
     
     const userRef = useRef();
     const errRef = useRef()
@@ -150,6 +150,7 @@ const {signup}=useAuth()
           const adminUIDs = [import.meta.env.VITE_FIREBASE_Admin_One, import.meta.env.VITE_FIREBASE_Admin_Two]; 
       
           setDisableSubmit(true);
+          console.log(import.meta.env.VITE_FIREBASE_Admin_One)
       
           if (bodaBodaUIDs.includes(uid)) {
             navigate("/BodaDashboard");
