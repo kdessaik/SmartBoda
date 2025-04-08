@@ -26,7 +26,7 @@ export function useAuth(){
   }
   export const doSignInWithGoogle=async()=>{
     const provider=new GoogleAuthProvider();
-    await signInWithPopup(auth,provider)
+    return await signInWithPopup(auth,provider)
   }
 
 

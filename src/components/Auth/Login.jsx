@@ -18,7 +18,7 @@ import { Link } from 'react-router';
 import { auth } from '../../../firebase';
 import { NavBar } from '../Public/Home'
 import { Footer } from '../Public/Home'
-
+import { ref, get } from "firebase/database";
 
 const USER_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
@@ -112,55 +112,64 @@ const {signup}=useAuth()
 
 
     try{
-      await  signInWithEmailAndPassword(auth,user,pwd)
-      setDisableSubmit(true)
-      navigate('/Dashboard')
-    
-         
-
-    }catch(err){
-        console.log(err)
-        if (!err.response){
-            setErrMsg('No server Response')
-
-        } else if(err.response?.status===409){
-            setErrMsg('Username taken')
-        } else{
-            setErrMsg('Registration Failed')
-        }
-        errRef.current.focus()
-
+        const result = await signInWithEmailAndPassword(auth, user, pwd);
+        const uid = result.user.uid;
+  
+      // Arrays of specific UIDs
+      const bodaBodaUIDs = [import.meta.env.VITE_FIREBASE_BODAUSER_One, import.meta.env.VITE_FIREBASE_BODAUSER_Two]; 
+      const adminUIDs = [import.meta.env.VITE_FIREBASE_Admin_One, import.meta.env.VITE_FIREBASE_Admin_Two]; 
+      setDisableSubmit(true);
+  
+      if (bodaBodaUIDs.includes(uid)) {
+        navigate("/BodaDashboard");
+      } else if (adminUIDs.includes(uid)) {
+        navigate("/Admin");
+      } else {
+        navigate("/Dashboard"); // regular users
+      }
+    } catch (err) {
+      console.log(err);
+      if (!err.response) {
+        setErrMsg("No server response");
+      } else if (err.response?.status === 409) {
+        setErrMsg("Username taken");
+      } else {
+        setErrMsg("Registration failed");
+      }
+      errRef.current?.focus();
     }
-     
-    }
-    const handleSubmitGoogleSignUp=async ()=>{
-        
-        try{
-            await  doSignInWithGoogle()
-            setDisableSubmit(true)
-            navigate('/Dashboardboda')
-            
-            
-           
-          
-               
+  };
+    const handleSubmitGoogleSignUp = async () => {
+        try {
+          const result = await doSignInWithGoogle();
+          const uid = result.user.uid;
       
-          }catch(err){
-            console.log(err)
-              if (!err.response){
-                  setErrMsg('No server Response')
+          // Arrays of specific UIDs
+          const bodaBodaUIDs = [import.meta.env.VITE_FIREBASE_BODAUSER_One, import.meta.env.VITE_FIREBASE_BODAUSER_Two]; 
+          const adminUIDs = [import.meta.env.VITE_FIREBASE_Admin_One, import.meta.env.VITE_FIREBASE_Admin_Two]; 
       
-              } else if(err.response?.status===409){
-                  setErrMsg('Username taken')
-              } else{
-                  setErrMsg('Registration Failed')
-              }
-              errRef.current.focus()
+          setDisableSubmit(true);
       
+          if (bodaBodaUIDs.includes(uid)) {
+            navigate("/BodaDashboard");
+          } else if (adminUIDs.includes(uid)) {
+            navigate("/Admin");
+          } else {
+            navigate("/Dashboard"); // regular users
           }
-
-
-    }
+        } catch (err) {
+          console.log(err);
+          if (!err.response) {
+            setErrMsg("No server response");
+          } else if (err.response?.status === 409) {
+            setErrMsg("Username taken");
+          } else {
+            setErrMsg("Registration failed");
+          }
+          errRef.current?.focus();
+        }
+      };
+      
 
   
   

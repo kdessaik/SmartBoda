@@ -14,6 +14,8 @@ const Register=lazy(()=>import('../Auth/Register.jsx'))
 const Dashboard=lazy(()=>import('../Private/Dashboard.jsx'))
 const Login=lazy(()=>import('../Auth/Login.jsx'))
 const DashboardBoda=lazy(()=>import('../Private/DashboardBoda.jsx'))
+const BodaDashboard=lazy(()=>import('../Private/BodaDashboard.jsx'))
+const Admin=lazy(()=>import('../Admin/AdminDashboard.jsx'))
 
 const router=createBrowserRouter([
     {
@@ -77,6 +79,19 @@ const router=createBrowserRouter([
         path:'/Dashboardboda',
         element:<Suspense fallback={<div>Loarding...</div>}>
             <DashboardBoda/>
+        </Suspense>
+    },
+    {
+        path:'/BodaDashboard',
+        element:<Suspense fallback={<div>Loarding...</div>}>
+            <BodaDashboard/>
+        </Suspense>
+
+    },
+    {
+        path:'/Admin',
+        element:<Suspense fallback={<div>Loarding...</div>}>
+            <Admin/>
         </Suspense>
     }
 ])
