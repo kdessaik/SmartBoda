@@ -27,16 +27,19 @@ export default Home
 export function NavBar(){
   return (
     <>
-     <Navbar bg="light" data-bs-theme="light" className='navBar'>
-        <Container className='navSection'>
+     <Navbar bg="light" expand="lg" className="navBar">
+        <Container className="navSection">
           <Navbar.Brand href="#home">SmartBoda</Navbar.Brand>
-          <Nav className="me-auto">
-           <Link to={'/'} className='nav-link'>Home</Link> 
-            <Link to={'/about'} className='nav-link'>About us</Link>
-            <Link to={'/help'} className='nav-link' >Help</Link>
-            <Link to='/login' className="btn btn-primary" id=''>Login</Link> 
-            <Link  to='/register' className="btn btn-success">Sign Up</Link>
-          </Nav>
+          <Navbar.Toggle aria-controls="main_navbar" />
+          <Navbar.Collapse id="main_navbar">
+            <Nav className="me-auto">
+              <Link to="/" className="nav-link">Home</Link>
+              <Link to="/about" className="nav-link">About us</Link>
+              <Link to="/help" className="nav-link">Help</Link>
+              <Link to="/login" className="btn btn-primary">Login</Link>
+              <Link to="/register" className="btn btn-success">Sign Up</Link>
+            </Nav>
+          </Navbar.Collapse>
         </Container>
       </Navbar>
     
