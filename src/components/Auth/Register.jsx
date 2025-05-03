@@ -290,3 +290,7 @@ const {signup}=useAuth()
 }
 
 export default Register
+
+function verifySignUp(){
+    
+}

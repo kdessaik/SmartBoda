@@ -171,6 +171,44 @@ const {signup}=useAuth()
           errRef.current?.focus();
         }
       };
+
+
+      const handleSubmitTest=async (e)=>{
+        e.preventDefault();
+        const v1=USER_REGEX.test(user);
+        const v2=PWD_REGEX.test(pwd);
+
+        if(!v1||!v2){
+            setErrMsg('Invalid entry');
+            return;
+    };
+
+        try {
+          const response = await axios.post('/.netlify/functions/register', {
+            name: user,
+            password: pwd,
+          });
+          alert(response.data.message);
+        } catch (error) {
+          console.error('Error registering user:', error);
+        }
+      };
+
+
+      const fetchUsersTest = async () => {
+        try {
+          const response = await axios.get('https://smartboda.netlify.app/.netlify/functions/server');
+          setUsers(response.data.data);
+          console.log(response.data.data)
+        } catch (error) {
+          console.error('Error fetching users:', error);
+        }
+      };
+
+
+
+
+
       
 
   
@@ -191,7 +229,7 @@ const {signup}=useAuth()
                 <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
                 
                 <h1>Login</h1>
-                <form  className="form-row" onSubmit={handleSubmit}>
+                <form  className="form-row" onSubmit={handleSubmitTest}>
                     <label htmlFor="username">
                         Email:
                         <FontAwesomeIcon icon={faCheck} className={validName ? "valid" : "hide"} />
@@ -265,8 +303,9 @@ const {signup}=useAuth()
                 <p>
                     Create an account<br />
                     <span className="line">
-                        {/*put router link here*/}
+                        {/* router link */}
                         <Link to='/register'>Sign Up</Link>
+                        <button onClick={fetchUsersTest}>Restrive data clg</button>
                     </span>
                 </p>
             </section>
