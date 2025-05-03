@@ -24,6 +24,7 @@ const USER_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
 const REGISTER_URL='/register'
+const dataBaseURL=import.meta.env.VITE_Database_URL
 
 
 
@@ -197,7 +198,7 @@ const {signup}=useAuth()
 
       const fetchUsersTest = async () => {
         try {
-          const response = await axios.get('https://smartboda.netlify.app/.netlify/functions/server');
+          const response = await axios.get(dataBaseURL);
           console.log(response.data.data)
           setUser(response.data.data);
           
