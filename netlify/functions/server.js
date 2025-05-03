@@ -18,7 +18,7 @@ db.connect((err) => {
 exports.handler = async (event, context) => {
   if (event.httpMethod === 'GET') {
     return new Promise((resolve, reject) => {
-      db.query('SELECT * FROM usersData', (err, results) => {
+      db.query('SELECT * FROM usertable', (err, results) => {
         if (err) {
           console.error('Error fetching users:', err);
           resolve({
