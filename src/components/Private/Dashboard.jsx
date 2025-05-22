@@ -6,7 +6,7 @@ import RestaurantList from "./RestaurantEntry";
 import "../../assets/style/dashboard.css";
 import { updateUserLocation } from "../../map/Map";
 import '../../assets/style/privateComponent.css';
-import underDevImg2 from "../../assets/image/underDev3.png";
+import underDevImg2 from "../../assets/image/UnderDev3.png";
 
 function Dashboard() {
   const apiKey = import.meta.env.VITE_Here_MAP_API_KEY;
@@ -49,7 +49,7 @@ function Dashboard() {
       await auth.signOut();
       navigate("/");
     } catch (error) {
-      console.error("Logout failed:", error);
+      console.error("Logout failed Now:", error);
     }
   };
 
