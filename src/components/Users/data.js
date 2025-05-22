@@ -8,4 +8,4 @@ const fetchUsersTest = async () => {
       console.error('Error fetching users:', error);
     }
   };
-<button onClick={fetchUsersTest}>Restrive data clg</button>
+<button onClick={fetchUsersTest}>Restrive data clg</button> 

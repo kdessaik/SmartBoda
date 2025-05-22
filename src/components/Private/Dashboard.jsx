@@ -5,7 +5,8 @@ import Mapfirst from "../../map/Map";
 import RestaurantList from "./RestaurantEntry";
 import "../../assets/style/dashboard.css";
 import { updateUserLocation } from "../../map/Map";
-
+import '../../assets/style/privateComponent.css';
+import underDevImg2 from "../../assets/image/underDev3.png";
 
 function Dashboard() {
   const apiKey = import.meta.env.VITE_Here_MAP_API_KEY;
@@ -147,14 +148,18 @@ function Dashboard() {
     <>
       <h1>Dashboard</h1>
       <h2>Welcome, {displayName}!</h2>
-      <button onClick={handleLogout}>Logout</button>
+      <button onClick={handleLogout}>Logout</button> 
+      <div> <img src={underDevImg2} alt="" className="UnderDevImgP1" /></div>
 
       <section>
+       
         <div style={{ display: "flex" }}>
+       
           <RestaurantList
             list={restaurantList}
             onClickHandler={onClickHandler_}
           />
+          
         </div>
 
         <Mapfirst

@@ -151,7 +151,9 @@ const {signup}=useAuth()
           const adminUIDs = [import.meta.env.VITE_FIREBASE_Admin_One, import.meta.env.VITE_FIREBASE_Admin_Two]; 
       
           setDisableSubmit(true);
-          console.log(import.meta.env.VITE_FIREBASE_Admin_One)
+          console.log('1',import.meta.env.VITE_FIREBASE_Admin_One)
+          
+          console.log(uid)
       
           if (bodaBodaUIDs.includes(uid)) {
             navigate("/BodaDashboard");

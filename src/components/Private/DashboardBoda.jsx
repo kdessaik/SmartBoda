@@ -2,6 +2,8 @@ import { useEffect, useState,useRef } from 'react';
 import { auth, db } from '../../../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { ref, set, onValue } from 'firebase/database';
+import '../../assets/style/privateComponents.css';
+import underDevImg2 from "../../assets/image/underDev3.png";
 
 
 const DashboardBoda = () => {
@@ -114,6 +116,7 @@ const DashboardBoda = () => {
         ref={mapRef}
         style={{ width: '100%', height: '70vh', border: '1px solid #ccc' }}
       />
+      <img src={underDevImg2} alt="" className="UnderDevImg1" />
     </div>
   );
 };

@@ -5,6 +5,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router';
+import underDevImg1 from '../../assets/image/UnderDev1.png'
 
 
 
@@ -14,7 +15,8 @@ function Home() {
   return (
    <>
    <NavBar/>
-   <h1>This Home Page</h1>
+   <h1></h1>
+   <img src={underDevImg1} alt="Underdevelopment Image" className='UnderDevImg1' />
    
    <Footer/>
    

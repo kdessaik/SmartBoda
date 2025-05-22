@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { ref, onValue } from "firebase/database";
 import { auth, db } from "../../../firebase";
+import '../../assets/style/privateComponent.css';
+import underDevImg2  from "../../assets/image/UnderDev3.png"
 
 const DashboardBoda = () => {
   const [user, setUser] = useState(null);
@@ -40,6 +42,7 @@ const DashboardBoda = () => {
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <h2 className="text-2xl font-bold mb-4">BodaBoda Driver Dashboard</h2>
+  
 
       <div className="flex items-center space-x-4 bg-white p-4 rounded shadow">
         {driverInfo?.photoUrl && (
@@ -72,6 +75,9 @@ const DashboardBoda = () => {
           <p className="text-gray-500">No transportation requests yet.</p>
         )}
       </div>
+       <div> <img src={underDevImg2} alt="" className="UnderDevImgP1" /></div>
+
+       
     </div>
   );
 };
