@@ -158,7 +158,7 @@ const {signup}=useAuth()
           if (bodaBodaUIDs.includes(uid)) {
             navigate("/BodaDashboard");
           } else if (adminUIDs.includes(uid)) {
-            navigate("/Admin");
+            navigate("/Dashboard");
           } else {
             navigate("/Dashboard"); // regular users
           }
