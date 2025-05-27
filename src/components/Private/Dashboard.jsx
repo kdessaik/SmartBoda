@@ -132,6 +132,10 @@ function Dashboard() {
     );
   }
 
+  const Profile=()=>{
+    navigate("/profile");
+  }
+
 
 
   //Get the current user location and store it in the database
@@ -148,6 +152,7 @@ function Dashboard() {
     <>
       <h1>Dashboard</h1>
       <h2>Welcome, {displayName}!</h2>
+      <button onClick={Profile}>Profile</button>
       <button onClick={handleLogout}>Logout</button> 
       <div> <img src={underDevImg2} alt="" className="UnderDevImgP1" /></div>
 

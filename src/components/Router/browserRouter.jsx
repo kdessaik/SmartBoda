@@ -16,7 +16,7 @@ const Login=lazy(()=>import('../Auth/Login.jsx'))
 const DashboardBoda=lazy(()=>import('../Private/DashboardBoda.jsx'))
 const BodaDashboard=lazy(()=>import('../Private/BodaDashboard.jsx'))
 const Admin=lazy(()=>import('../Admin/AdminDashboard.jsx'))
-
+const Profile=lazy(()=>import('../Private/Profile.jsx'))
 const router=createBrowserRouter([
     {
         path:'/',
@@ -93,6 +93,11 @@ const router=createBrowserRouter([
         element:<Suspense fallback={<div>Loarding...</div>}>
             <Admin/>
         </Suspense>
+    },
+    {
+        path:'/Profile',
+        element:<Suspense fallback={<div>Loarding...</div>}>
+            <Profile/> </Suspense>
     }
 ])
 export default router
