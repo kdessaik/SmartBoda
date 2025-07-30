@@ -82,26 +82,37 @@ function Dashboard() {
           setLoadingLocation(false);            // Mark loading as done
           setLocationError(null);               // Clear any previous errors
   
-          // Update Firebase if user is logged in
+          // Update Firebase and actual location if user is logged in
           if (auth.currentUser) {
             const uid = auth.currentUser.uid;
             updateUserLocation(uid, position.coords);
+           
           }
+          
         },
         (error) => {
           console.error("Error getting location:", error);
           setLocationError(error.message);
           setLoadingLocation(false);
+          // If user denies location, redirect to home after short delay
+        setTimeout(() => {
+          navigate("/");
+        }, 20000);
+
+
         },
         {
           enableHighAccuracy: true,
-          timeout: 30000,
+          timeout: 15000,
           maximumAge: 0,
         }
       );
     } else {
-      setLocationError("Geolocation is not supported by this browser.");
-      setLoadingLocation(false);
+      // If geolocation is not supported, redirect immediately
+    setLocationError("Geolocation is not supported by this browser.");
+    setLoadingLocation(false);
+    navigate("/");
+  
     }
   
     // Cleanup watcher on component unmount
@@ -110,7 +121,7 @@ function Dashboard() {
         navigator.geolocation.clearWatch(watchId);
       }
     };
-  }, []);
+  }, [navigate]);
 
 
 
@@ -124,11 +135,29 @@ function Dashboard() {
   }
 
   if (locationError) {
+
+    const handleRetry = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        () => {
+          window.location.reload();
+        },
+        () => {
+          alert("Please enable location services in your device settings to continue using this feature.");
+        }
+      );
+    } else {
+      alert("Geolocation is not supported by your browser.");
+    }
+  };
+
+
     return (
       <div>
-        <p>Error: {locationError}</p>
-        <button onClick={() => window.location.reload()}>Retry</button>
-      </div>
+      <p>Error: {locationError}</p>
+      <button onClick={handleRetry}>Retry</button>
+      <p style={{color: "red"}}>Location access is required. Please activate location services in your device settings.</p>
+    </div>
     );
   }
 
