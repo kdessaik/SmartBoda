@@ -145,7 +145,7 @@ const Mapfirst = ({ apikey, userPosition, restaurantPosition }) => {
         userMarkerRef.current = userMarker;
         map.current.addObject(userMarker);
       } else {
-        // Update user's position and re-center
+        // Update user's position 
         const newCoords = { lat: userPosition.lat, lng: userPosition.lng };
   
         if (userMarkerRef.current) {
@@ -158,7 +158,7 @@ const Mapfirst = ({ apikey, userPosition, restaurantPosition }) => {
           map.current.addObject(userMarker);
         }
   
-        map.current.setCenter(newCoords);
+        
       }
   
       // Draw route if restaurant selected
