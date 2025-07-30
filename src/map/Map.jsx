@@ -111,69 +111,68 @@ export const updateUserLocation = (uid, coords) => {
 
 
 const Mapfirst = ({ apikey, userPosition, restaurantPosition }) => {
-    const mapRef = useRef(null);
-    const map = useRef(null);
-    const platform = useRef(null);
-    const userMarkerRef = useRef(null);
-  
-    useEffect(() => {
-      if (!userPosition) return;
-  
-      if (!map.current) {
-        // Initialize platform and map
-        platform.current = new H.service.Platform({ apikey });
-        const defaultLayers = platform.current.createDefaultLayers({ pois: true });
-  
-        const newMap = new H.Map(
-          mapRef.current,
-          defaultLayers.vector.normal.map,
-          {
-            zoom: 14,
-            center: userPosition,
-          }
-        );
-  
-        new H.mapevents.Behavior(new H.mapevents.MapEvents(newMap));
-        H.ui.UI.createDefault(newMap, defaultLayers);
-  
-        map.current = newMap;
-  
-        // Add user marker initially
-        const userMarker = new H.map.Marker(userPosition, {
+  const mapRef = useRef(null);
+  const map = useRef(null);
+  const platform = useRef(null);
+  const userMarkerRef = useRef(null);
+
+  useEffect(() => {
+    if (!userPosition) return;
+
+    if (!map.current) {
+      // Initialize platform and map
+      platform.current = new H.service.Platform({ apikey });
+      const defaultLayers = platform.current.createDefaultLayers({ pois: true });
+
+      const newMap = new H.Map(
+        mapRef.current,
+        defaultLayers.vector.normal.map,
+        {
+          zoom: 14,
+          center: userPosition,
+        }
+      );
+
+      new H.mapevents.Behavior(new H.mapevents.MapEvents(newMap));
+      H.ui.UI.createDefault(newMap, defaultLayers);
+
+      map.current = newMap;
+
+      // Add user marker initially
+      const userMarker = new H.map.Marker(userPosition, {
+        icon: getMarkerIcon('blue'),
+      });
+      userMarkerRef.current = userMarker;
+      map.current.addObject(userMarker);
+    } else {
+      // Update user's position (do NOT reset zoom or center)
+      const newCoords = { lat: userPosition.lat, lng: userPosition.lng };
+
+      if (userMarkerRef.current) {
+        userMarkerRef.current.setGeometry(newCoords);
+      } else {
+        const userMarker = new H.map.Marker(newCoords, {
           icon: getMarkerIcon('blue'),
         });
         userMarkerRef.current = userMarker;
         map.current.addObject(userMarker);
-      } else {
-        // Update user's position 
-        const newCoords = { lat: userPosition.lat, lng: userPosition.lng };
-  
-        if (userMarkerRef.current) {
-          userMarkerRef.current.setGeometry(newCoords);
-        } else {
-          const userMarker = new H.map.Marker(newCoords, {
-            icon: getMarkerIcon('blue'),
-          });
-          userMarkerRef.current = userMarker;
-          map.current.addObject(userMarker);
-        }
-  
-        
       }
-  
-      // Draw route if restaurant selected
-      if (restaurantPosition) {
-        calculateRoute(platform.current, map.current, userPosition, restaurantPosition);
-      }
-    }, [apikey, userPosition, restaurantPosition]);
-  
-    return (
-      <div
-        style={{ width: '95vw', height: '50vh' }}
-        ref={mapRef}
-      ></div>
-    );
-  };
+      // Do NOT call map.current.setCenter(newCoords) or set zoom here
+    }
+
+    // Draw route if restaurant selected
+    if (restaurantPosition) {
+      calculateRoute(platform.current, map.current, userPosition, restaurantPosition);
+    }
+  }, [apikey, userPosition, restaurantPosition]);
+
+  return (
+    <div
+      style={{ width: '95vw', height: '50vh' }}
+      ref={mapRef}
+    ></div>
+  );
+};
   
   export default Mapfirst;
   
