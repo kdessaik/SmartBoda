@@ -116,55 +116,66 @@ const Mapfirst = ({ apikey, userPosition, restaurantPosition }) => {
   const platform = useRef(null);
   const userMarkerRef = useRef(null);
 
-  useEffect(() => {
-    if (!userPosition) return;
+ useEffect(() => {
+  if (!userPosition) return;
 
-    if (!map.current) {
-      // Initialize platform and map
-      platform.current = new H.service.Platform({ apikey });
-      const defaultLayers = platform.current.createDefaultLayers({ pois: true });
+  if (!map.current) {
+    // Initialize platform and map
+    platform.current = new H.service.Platform({ apikey });
+    const defaultLayers = platform.current.createDefaultLayers({ pois: true });
 
-      const newMap = new H.Map(
-        mapRef.current,
-        defaultLayers.vector.normal.map,
-        {
-          zoom: 14,
-          center: userPosition,
-        }
-      );
+    const newMap = new H.Map(
+      mapRef.current,
+      defaultLayers.vector.normal.map,
+      {
+        zoom: 14,
+        center: userPosition,
+      }
+    );
 
-      new H.mapevents.Behavior(new H.mapevents.MapEvents(newMap));
-      H.ui.UI.createDefault(newMap, defaultLayers);
+    new H.mapevents.Behavior(new H.mapevents.MapEvents(newMap));
+    H.ui.UI.createDefault(newMap, defaultLayers);
 
-      map.current = newMap;
+    map.current = newMap;
 
-      // Add user marker initially
-      const userMarker = new H.map.Marker(userPosition, {
-        icon: getMarkerIcon('blue'),
+    // Add user marker initially (red for real-time location)
+    const userMarker = new H.map.Marker(userPosition, {
+      icon: getMarkerIcon('red'),
+    });
+    userMarkerRef.current = userMarker;
+    map.current.addObject(userMarker);
+  } else {
+    // Update user's position (keep only one red marker)
+    const newCoords = { lat: userPosition.lat, lng: userPosition.lng };
+
+    if (userMarkerRef.current) {
+      userMarkerRef.current.setGeometry(newCoords);
+    } else {
+      const userMarker = new H.map.Marker(newCoords, {
+        icon: getMarkerIcon('red'),
       });
       userMarkerRef.current = userMarker;
       map.current.addObject(userMarker);
-    } else {
-      // Update user's position (do NOT reset zoom or center)
-      const newCoords = { lat: userPosition.lat, lng: userPosition.lng };
-
-      if (userMarkerRef.current) {
-        userMarkerRef.current.setGeometry(newCoords);
-      } else {
-        const userMarker = new H.map.Marker(newCoords, {
-          icon: getMarkerIcon('blue'),
-        });
-        userMarkerRef.current = userMarker;
-        map.current.addObject(userMarker);
-      }
-      // Do NOT call map.current.setCenter(newCoords) or set zoom here
     }
 
-    // Draw route if restaurant selected
-    if (restaurantPosition) {
-      calculateRoute(platform.current, map.current, userPosition, restaurantPosition);
+    // Remove any other red markers except the current one
+    const markers = map.current.getObjects().filter(
+      obj =>
+        obj instanceof H.map.Marker &&
+        obj !== userMarkerRef.current &&
+        obj.getIcon()?.getSvgData?.()?.includes('red')
+    );
+    if (markers.length > 0) {
+      map.current.removeObjects(markers);
     }
-  }, [apikey, userPosition, restaurantPosition]);
+    // Do NOT call map.current.setCenter(newCoords) or set zoom here
+  }
+
+  // Draw route if restaurant selected
+  if (restaurantPosition) {
+    calculateRoute(platform.current, map.current, userPosition, restaurantPosition);
+  }
+}, [apikey, userPosition, restaurantPosition]);
 
   return (
     <div
