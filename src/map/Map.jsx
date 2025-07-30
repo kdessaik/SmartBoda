@@ -186,35 +186,43 @@ const Mapfirst = ({ apikey, userPosition, restaurantPosition }) => {
   }
   
   function calculateRoute(platform, map, start, destination) {
-    const router = platform.getRoutingService(null, 8);
-    const routingParams = {
-      origin: `${start.lat},${start.lng}`,
-      destination: `${destination.lat},${destination.lng}`,
-      transportMode: 'car',
-      return: 'polyline',
-    };
-  
-    router.calculateRoute(routingParams, (response) => {
-      const sections = response.routes[0].sections;
-      const lineStrings = sections.map((s) =>
-        H.geo.LineString.fromFlexiblePolyline(s.polyline)
-      );
-      const multiLineString = new H.geo.MultiLineString(lineStrings);
-      const bounds = multiLineString.getBoundingBox();
-  
-      map.removeObjects(map.getObjects());
-  
-      const polyline = new H.map.Polyline(multiLineString, {
-        style: { lineWidth: 5 },
-      });
-  
-      map.addObjects([
-        polyline,
-        new H.map.Marker(start, { icon: getMarkerIcon('red') }),
-        new H.map.Marker(destination, { icon: getMarkerIcon('green') }),
-      ]);
-  
-      map.getViewModel().setLookAtData({ bounds });
-    }, console.error);
-  }
+  const router = platform.getRoutingService(null, 8);
+  const routingParams = {
+    origin: `${start.lat},${start.lng}`,
+    destination: `${destination.lat},${destination.lng}`,
+    transportMode: 'car',
+    return: 'polyline',
+  };
 
+  router.calculateRoute(routingParams, (response) => {
+    const sections = response.routes[0].sections;
+    const lineStrings = sections.map((s) =>
+      H.geo.LineString.fromFlexiblePolyline(s.polyline)
+    );
+    const multiLineString = new H.geo.MultiLineString(lineStrings);
+
+    // Remove previous route and route markers, but keep user marker
+    const objectsToRemove = map.getObjects().filter(
+      obj =>
+        obj instanceof H.map.Polyline ||
+        (obj instanceof H.map.Marker &&
+          (obj.getIcon()?.getSvgData?.()?.includes('red') ||
+           obj.getIcon()?.getSvgData?.()?.includes('green')))
+    );
+    map.removeObjects(objectsToRemove);
+
+    const polyline = new H.map.Polyline(multiLineString, {
+      style: { lineWidth: 5 },
+    });
+
+    // Add route and markers, but do NOT reset map bounds or zoom
+    map.addObjects([
+      polyline,
+      new H.map.Marker(start, { icon: getMarkerIcon('red') }),
+      new H.map.Marker(destination, { icon: getMarkerIcon('green') }),
+    ]);
+
+    // Do NOT call map.getViewModel().setLookAtData({ bounds });
+    // This keeps the user's zoom and center unchanged
+  }, console.error);
+}
